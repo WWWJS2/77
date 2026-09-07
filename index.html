@@ -1,1 +1,169 @@
-<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>نظام التقارير الإلكترونية | الابتدائية السابعة بالوجه</title><link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet"><script src="config.js"></script><style>*{box-sizing:border-box}body{margin:0;font-family:Tajawal,Arial,sans-serif;background:#f0fdf4;color:#0f172a}.top{background:#124f3d;color:white;text-align:center;padding:18px 12px;line-height:1.8}.top b{font-size:20px}.hero{background:white;text-align:center;padding:20px 12px;border-bottom:2px solid #d1fae5}.hero h1{color:#047857;margin:0 0 6px}.hero p{margin:0;color:#64748b}.q{color:#047857;font-weight:800;margin-top:10px}.main{background:linear-gradient(135deg,#10b981,#059669);padding:22px 4vw 35px;min-height:62vh}.main h2{text-align:center;color:white;margin:0 0 20px}.cards{max-width:1100px;margin:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}.card{border:0;background:white;border-radius:15px;padding:20px 12px;box-shadow:0 6px 16px #064e3b22;cursor:pointer;font-family:inherit;transition:.2s}.card:hover{transform:translateY(-4px)}.ico{font-size:34px}.ttl{font-weight:900;color:#047857;font-size:18px;margin-top:8px}.sub{font-size:13px;color:#64748b;margin-top:5px}.special{border-top:4px solid #fbbf24}.purple{border-top:4px solid #8b5cf6}.footer{text-align:center;background:#047857;color:white;padding:16px;font-weight:700}.viewer{display:none;position:fixed;inset:0;background:white;z-index:20}.bar{height:58px;display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-bottom:1px solid #ddd}.back{border:0;background:#10b981;color:white;border-radius:10px;padding:9px 15px;font-weight:900;cursor:pointer}.frame{width:100%;height:calc(100vh - 58px);border:0}.notice{display:none;max-width:850px;margin:25px auto;background:white;padding:25px;border-radius:18px;box-shadow:0 8px 28px #064e3b22}.notice h2{color:#047857}.notice button{border:0;background:#10b981;color:white;padding:10px 16px;border-radius:10px;font-weight:800;cursor:pointer}@media(max-width:600px){.top b{font-size:17px}.hero h1{font-size:24px}.cards{grid-template-columns:1fr}}</style></head><body><section class="top"><div id="country"></div><div id="ministry"></div><div id="department"></div><b id="school"></b></section><section class="hero"><h1>نظام التقارير الإلكترونية</h1><p>منصة متكاملة لإدارة التقارير المدرسية</p><div class="q">﴿ وَقُلْ رَبِّ زِدْنِي عِلْمًا ﴾</div></section><main class="main" id="home"><h2>تقارير المدرسة الشاملة</h2><div class="cards"><button class="card" onclick="go('https://defullah2010-svg.github.io/R1397/','التقارير')"><div class="ico">🗓️</div><div class="ttl">التقارير</div><div class="sub">اليومي • الأسبوعي • الشهري</div></button><button class="card" onclick="go('https://defullah2010-svg.github.io/A1397/','النشاط الطلابي')"><div class="ico">🌟</div><div class="ttl">النشاط الطلابي</div></button><button class="card" onclick="go('https://defullah2010-svg.github.io/AC1397/','الأنشطة اللاصفية')"><div class="ico">🧩</div><div class="ttl">الأنشطة اللاصفية</div></button><button class="card" onclick="go('https://defullah2010-svg.github.io/Trace1397/','متابعة الأنشطة')"><div class="ico">📋</div><div class="ttl">متابعة الأنشطة</div></button><button class="card" onclick="go('https://defullah2010-svg.github.io/L1397/','التواصل مع أولياء الأمور')"><div class="ico">📞</div><div class="ttl">التواصل مع أولياء الأمور</div></button><button class="card" onclick="go('https://defullah2010-svg.github.io/T1397/','التوجيه الطلابي')"><div class="ico">🎓</div><div class="ttl">التوجيه الطلابي</div></button><button class="card" onclick="go('https://defullah2010-svg.github.io/V1397/','تبادل الزيارات')"><div class="ico">📝</div><div class="ttl">تبادل الزيارات</div></button><button class="card special" onclick="localPage('حصة الانتظار')"><div class="ico">⏳</div><div class="ttl">حصة الانتظار</div><div class="sub">تسجيل ومتابعة حصص الانتظار</div></button><button class="card purple" onclick="localPage('المختبرات')"><div class="ico">🔬</div><div class="ttl">المختبرات</div><div class="sub">تقارير البرامج والتجارب</div></button><button class="card special" onclick="localPage('التقرير العام')"><div class="ico">📊</div><div class="ttl">التقرير العام</div><div class="sub">إعداد تقرير عام للبرنامج أو النشاط</div></button></div></main><section class="notice" id="notice"><h2 id="noticeTitle"></h2><p>هذا القسم مخصص لتقارير <b id="noticeName"></b> في الابتدائية السابعة بالوجه.</p><p>مديرة المدرسة: <b>هديل الطيار</b></p><button onclick="back()">العودة للرئيسية</button></section><div class="viewer" id="viewer"><div class="bar"><b id="viewTitle"></b><button class="back" onclick="closeViewer()">العودة</button></div><iframe class="frame" id="frame"></iframe></div><footer class="footer">الابتدائية السابعة بالوجه — مديرة المدرسة: هديل الطيار</footer><script>const C=window.SCHOOL_CONFIG||{};document.getElementById('country').textContent=C.country||'المملكة العربية السعودية';document.getElementById('ministry').textContent=C.ministry||'وزارة التعليم';document.getElementById('department').textContent=C.department||'الإدارة العامة للتعليم بمنطقة تبوك';document.getElementById('school').textContent=C.schoolName||'الابتدائية السابعة بالوجه';function go(u,t){document.getElementById('viewer').style.display='block';document.getElementById('viewTitle').textContent=t;document.getElementById('frame').src=u}function closeViewer(){document.getElementById('viewer').style.display='none';document.getElementById('frame').src='about:blank'}function localPage(n){document.getElementById('home').style.display='none';document.getElementById('notice').style.display='block';document.getElementById('noticeTitle').textContent=n;document.getElementById('noticeName').textContent=n;scrollTo(0,0)}function back(){document.getElementById('notice').style.display='none';document.getElementById('home').style.display='block'}</script></body></html>
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>نظام التقارير الإلكترونية | الابتدائية السابعة بالوجه</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<style>
+:root{--primary:#10b981;--secondary:#059669;--dark:#047857;--light:#d1fae5;--accent:#fbbf24;--lab:#8b5cf6;--text:#0f172a;--gray:#64748b}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;font-family:Tajawal,Arial,sans-serif;background:#f0fdf4;color:var(--text)}
+.top{background:#124f3d;color:#fff;text-align:center;padding:14px 12px;line-height:1.65}.top b{font-size:20px}
+.hero{background:#fff;text-align:center;padding:18px 12px;border-bottom:2px solid var(--light);box-shadow:0 3px 12px #064e3b12}.hero h1{color:var(--dark);margin:0 0 6px;font-size:30px}.hero p{margin:0;color:var(--gray)}.q{color:var(--dark);font-weight:800;margin-top:9px}
+.main{background:linear-gradient(135deg,var(--primary),var(--secondary));padding:28px 4vw 42px;min-height:64vh}.main h2{text-align:center;color:#fff;margin:0 0 24px;font-size:28px}
+.cards{max-width:1220px;margin:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:18px}
+.card{appearance:none;border:1px solid #0000000a;background:#fff;border-radius:16px;padding:22px 14px;min-height:164px;box-shadow:0 6px 18px #064e3b20;cursor:pointer;font-family:inherit;transition:.2s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center}.card:hover{transform:translateY(-4px);box-shadow:0 11px 24px #064e3b2b}.card:active{transform:scale(.99)}
+.ico{font-size:38px;line-height:1.2}.ttl{font-weight:900;color:var(--dark);font-size:19px;margin-top:8px}.sub{font-size:13px;color:var(--gray);margin-top:4px}.special{border-top:4px solid var(--accent)}.purple{border-top:4px solid var(--lab)}
+.footer{text-align:center;background:#347d60;color:#fff;padding:18px 12px;font-weight:800;font-size:18px}
+.viewer{display:none;position:fixed;inset:0;background:#fff;z-index:9999}.bar{height:62px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 14px;border-bottom:1px solid #dbe3df;background:#fff;box-shadow:0 2px 10px #00000010;position:relative;z-index:2}.bar b{color:var(--dark);font-size:18px}.back{border:0;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;border-radius:10px;padding:10px 17px;font-family:inherit;font-weight:900;cursor:pointer}.frame{width:100%;height:calc(100vh - 62px);border:0;background:#fff}
+.loading{position:absolute;inset:62px 0 0;display:none;align-items:center;justify-content:center;background:#f8fffb;z-index:1;color:var(--dark);font-weight:900;font-size:18px}.loading.show{display:flex}
+@media(max-width:700px){.top b{font-size:17px}.hero h1{font-size:24px}.main h2{font-size:23px}.cards{grid-template-columns:1fr}.card{min-height:135px}.footer{font-size:15px}.bar b{font-size:15px}}
+</style>
+</head>
+<body>
+<section class="top">
+  <div id="country"></div>
+  <div id="ministry"></div>
+  <div id="department"></div>
+  <b id="school"></b>
+</section>
+<section class="hero">
+  <h1>نظام التقارير الإلكترونية</h1>
+  <p>منصة متكاملة لإدارة التقارير المدرسية</p>
+  <div class="q">﴿ وَقُلْ رَبِّ زِدْنِي عِلْمًا ﴾</div>
+</section>
+<main class="main" id="home">
+  <h2>تقارير المدرسة الشاملة</h2>
+  <div class="cards">
+    <button class="card" type="button" data-url="https://defullah2010-svg.github.io/R1397/" data-title="التقارير"><div class="ico">🗓️</div><div class="ttl">التقارير</div><div class="sub">اليومي • الأسبوعي • الشهري</div></button>
+    <button class="card" type="button" data-url="https://defullah2010-svg.github.io/A1397/" data-title="النشاط الطلابي"><div class="ico">🌟</div><div class="ttl">النشاط الطلابي</div></button>
+    <button class="card" type="button" data-url="https://defullah2010-svg.github.io/AC1397/" data-title="الأنشطة اللاصفية"><div class="ico">🧩</div><div class="ttl">الأنشطة اللاصفية</div></button>
+    <button class="card" type="button" data-url="https://defullah2010-svg.github.io/Trace1397/" data-title="متابعة الأنشطة"><div class="ico">📋</div><div class="ttl">متابعة الأنشطة</div></button>
+    <button class="card" type="button" data-url="https://defullah2010-svg.github.io/L1397/" data-title="التواصل مع أولياء الأمور"><div class="ico">📞</div><div class="ttl">التواصل مع أولياء الأمور</div></button>
+    <button class="card" type="button" data-url="https://defullah2010-svg.github.io/T1397/" data-title="التوجيه الطلابي"><div class="ico">🎓</div><div class="ttl">التوجيه الطلابي</div></button>
+    <button class="card" type="button" data-url="https://defullah2010-svg.github.io/V1397/" data-title="تبادل الزيارات"><div class="ico">📝</div><div class="ttl">تبادل الزيارات</div></button>
+    <button class="card" type="button" data-url="https://defullah2010-svg.github.io/P1397/" data-title="خريطة نواتج التعلّم"><div class="ico">🗺️</div><div class="ttl">خريطة نواتج التعلّم</div></button>
+    <button class="card special" type="button" data-local="wait" data-title="حصة الانتظار"><div class="ico">🕒</div><div class="ttl">حصة الانتظار</div><div class="sub">تسجيل ومتابعة حصص الانتظار</div></button>
+    <button class="card purple" type="button" data-local="lab" data-title="المختبرات"><div class="ico">🔬</div><div class="ttl">المختبرات</div><div class="sub">تقارير البرامج والتجارب</div></button>
+    <button class="card special" type="button" data-local="general" data-title="التقرير العام"><div class="ico">📄</div><div class="ttl">التقرير العام</div><div class="sub">يومي • أسبوعي • شهري</div></button>
+    <button class="card" type="button" data-url="https://defullah2010-svg.github.io/PLC1397/" data-title="مجتمعات التعلّم المهنية"><div class="ico">📑</div><div class="ttl">مجتمعات التعلّم المهنية</div></button>
+    <button class="card" type="button" data-url="https://defullah2010-svg.github.io/D1397/" data-title="التوجيه الصحّي"><div class="ico">⚕️</div><div class="ttl">التوجيه الصحّي</div></button>
+    <button class="card" type="button" data-url="https://defullah2010-svg.github.io/S1397/" data-title="التعلّم النشط"><div class="ico">♟️</div><div class="ttl">التعلّم النشط</div></button>
+    <button class="card" type="button" data-url="https://defullah2010-svg.github.io/LessonA1397/" data-title="الدرس التطبيقي"><div class="ico">📚</div><div class="ttl">الدرس التطبيقي</div></button>
+    <button class="card" type="button" data-url="https://defullah2010-svg.github.io/Warshah1397/" data-title="ورش العمل"><div class="ico">🛠️</div><div class="ttl">ورش العمل</div></button>
+  </div>
+</main>
+<footer class="footer">الابتدائية السابعة بالوجه — مديرة المدرسة: هديل الطيار</footer>
+
+<div class="viewer" id="viewer">
+  <div class="bar"><b id="viewTitle">التقرير</b><button class="back" type="button" id="closeBtn">العودة للرئيسية</button></div>
+  <div class="loading" id="loading">جاري فتح التقرير...</div>
+  <iframe class="frame" id="frame" src="about:blank" allow="clipboard-write"></iframe>
+</div>
+
+<script>
+const C=window.SCHOOL_CONFIG||{};
+document.getElementById('country').textContent=C.country||'المملكة العربية السعودية';
+document.getElementById('ministry').textContent=C.ministry||'وزارة التعليم';
+document.getElementById('department').textContent=C.department||'الإدارة العامة للتعليم بمنطقة تبوك';
+document.getElementById('school').textContent=C.schoolName||'الابتدائية السابعة بالوجه';
+
+const viewer=document.getElementById('viewer');
+const frame=document.getElementById('frame');
+const viewTitle=document.getElementById('viewTitle');
+const loading=document.getElementById('loading');
+let pendingLocal=null;
+
+function openViewer(title){
+  viewTitle.textContent=title||'التقرير';
+  viewer.style.display='block';
+  document.body.style.overflow='hidden';
+  loading.classList.add('show');
+}
+function go(url,title){
+  pendingLocal=null;
+  openViewer(title);
+  frame.src=url;
+}
+function patchLocalSchoolPage(which){
+  try{
+    const w=frame.contentWindow;
+    const d=frame.contentDocument;
+    if(!w||!d) return;
+
+    // تخزين مستقل للابتدائية السابعة حتى لا تختلط بياناتها مع المدرسة الأخرى.
+    w.safeGetStorage=function(key){
+      try{return w.localStorage.getItem('school7_wajh__'+key)}catch(e){return null}
+    };
+    w.safeSetStorage=function(key,value){
+      try{w.localStorage.setItem('school7_wajh__'+key,value);return true}catch(e){return false}
+    };
+
+    // تحديث البيانات المحفوظة بعد تغيير مساحة التخزين.
+    if(typeof w.waitLoadSessions==='function') w.waitLoadSessions();
+    if(typeof w.loadLab==='function') w.loadLab();
+    if(typeof w.loadGeneral==='function') w.loadGeneral();
+
+    // تعديل اسم المديرة داخل صفحات الطباعة الخاصة بالنماذج المحلية.
+    ['buildWaitPrintHTML','buildLabsPrintHTML','buildGeneralPrintHTML'].forEach(function(fn){
+      if(typeof w[fn]==='function' && !w[fn].__school7patched){
+        const original=w[fn];
+        const wrapped=function(){
+          let html=original.apply(w,arguments);
+          if(typeof html==='string'){
+            html=html.replace(/أماني\s+آل\s+عبشان/g,'هديل الطيار');
+            html=html.replace(/الابتدائية\s+السادسة\s+والعشرون/g,'الابتدائية السابعة بالوجه');
+          }
+          return html;
+        };
+        wrapped.__school7patched=true;
+        w[fn]=wrapped;
+      }
+    });
+
+    if(typeof w.loadLocal==='function') w.loadLocal(which);
+
+    // داخل هذه النسخة نعرض النموذج مباشرة دون تكرار رأس وقائمة المدرسة الأخرى.
+    const header=d.querySelector('.header-logo'); if(header) header.style.display='none';
+    const nav=d.querySelector('nav'); if(nav) nav.style.display='none';
+    const back=d.getElementById('back-btn'); if(back) back.style.display='none';
+    const footer=d.querySelector('.site-footer'); if(footer) footer.style.display='none';
+    d.documentElement.style.scrollBehavior='auto';
+    w.scrollTo(0,0);
+  }catch(err){
+    console.warn('تعذر تخصيص النموذج المحلي',err);
+  }
+}
+function openLocal(which,title){
+  pendingLocal=which;
+  openViewer(title);
+  // نفس نماذج المدرسة الأخرى حرفيًا، مع عزل بيانات المدرسة السابعة وتغيير المديرة.
+  frame.src='https://wwwjs2.github.io/school26/?school7='+encodeURIComponent(which)+'&v=2';
+}
+frame.addEventListener('load',function(){
+  loading.classList.remove('show');
+  if(pendingLocal) setTimeout(function(){patchLocalSchoolPage(pendingLocal)},80);
+});
+function closeViewer(){
+  viewer.style.display='none';
+  document.body.style.overflow='';
+  frame.src='about:blank';
+  pendingLocal=null;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.getElementById('closeBtn').addEventListener('click',closeViewer);
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&viewer.style.display==='block')closeViewer()});
+
+document.querySelectorAll('.card').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    if(btn.dataset.local) openLocal(btn.dataset.local,btn.dataset.title);
+    else if(btn.dataset.url) go(btn.dataset.url,btn.dataset.title);
+  });
+});
+</script>
+</body>
+</html>
