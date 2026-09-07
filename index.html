@@ -19,151 +19,63 @@ html,body{margin:0;min-height:100%;font-family:Tajawal,Arial,sans-serif;backgrou
 .card{appearance:none;border:1px solid #0000000a;background:#fff;border-radius:16px;padding:22px 14px;min-height:164px;box-shadow:0 6px 18px #064e3b20;cursor:pointer;font-family:inherit;transition:.2s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center}.card:hover{transform:translateY(-4px);box-shadow:0 11px 24px #064e3b2b}.card:active{transform:scale(.99)}
 .ico{font-size:38px;line-height:1.2}.ttl{font-weight:900;color:var(--dark);font-size:19px;margin-top:8px}.sub{font-size:13px;color:var(--gray);margin-top:4px}.special{border-top:4px solid var(--accent)}.purple{border-top:4px solid var(--lab)}
 .footer{text-align:center;background:#347d60;color:#fff;padding:18px 12px;font-weight:800;font-size:18px}
-.viewer{display:none;position:fixed;inset:0;background:#fff;z-index:9999}.bar{height:62px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 14px;border-bottom:1px solid #dbe3df;background:#fff;box-shadow:0 2px 10px #00000010;position:relative;z-index:2}.bar b{color:var(--dark);font-size:18px}.back{border:0;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;border-radius:10px;padding:10px 17px;font-family:inherit;font-weight:900;cursor:pointer}.frame{width:100%;height:calc(100vh - 62px);border:0;background:#fff}
-.loading{position:absolute;inset:62px 0 0;display:none;align-items:center;justify-content:center;background:#f8fffb;z-index:1;color:var(--dark);font-weight:900;font-size:18px}.loading.show{display:flex}
+.viewer{display:none;position:fixed;inset:0;background:#fff;z-index:9999}.bar{height:62px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 14px;border-bottom:1px solid #dbe3df;background:#fff;box-shadow:0 2px 10px #00000010;position:relative;z-index:2}.bar b{color:var(--dark);font-size:18px}.back{border:0;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;border-radius:10px;padding:10px 17px;font-family:inherit;font-weight:900;cursor:pointer}.frame{width:100%;height:calc(100vh - 62px);border:0;background:#fff}.loading{position:absolute;inset:62px 0 0;display:none;align-items:center;justify-content:center;background:#f8fffb;z-index:1;color:var(--dark);font-weight:900;font-size:18px}.loading.show{display:flex}
 @media(max-width:700px){.top b{font-size:17px}.hero h1{font-size:24px}.main h2{font-size:23px}.cards{grid-template-columns:1fr}.card{min-height:135px}.footer{font-size:15px}.bar b{font-size:15px}}
 </style>
 </head>
 <body>
-<section class="top">
-  <div id="country"></div>
-  <div id="ministry"></div>
-  <div id="department"></div>
-  <b id="school"></b>
-</section>
-<section class="hero">
-  <h1>نظام التقارير الإلكترونية</h1>
-  <p>منصة متكاملة لإدارة التقارير المدرسية</p>
-  <div class="q">﴿ وَقُلْ رَبِّ زِدْنِي عِلْمًا ﴾</div>
-</section>
-<main class="main" id="home">
-  <h2>تقارير المدرسة الشاملة</h2>
-  <div class="cards">
-    <button class="card" type="button" data-url="https://defullah2010-svg.github.io/R1397/" data-title="التقارير"><div class="ico">🗓️</div><div class="ttl">التقارير</div><div class="sub">اليومي • الأسبوعي • الشهري</div></button>
-    <button class="card" type="button" data-url="https://defullah2010-svg.github.io/A1397/" data-title="النشاط الطلابي"><div class="ico">🌟</div><div class="ttl">النشاط الطلابي</div></button>
-    <button class="card" type="button" data-url="https://defullah2010-svg.github.io/AC1397/" data-title="الأنشطة اللاصفية"><div class="ico">🧩</div><div class="ttl">الأنشطة اللاصفية</div></button>
-    <button class="card" type="button" data-url="https://defullah2010-svg.github.io/Trace1397/" data-title="متابعة الأنشطة"><div class="ico">📋</div><div class="ttl">متابعة الأنشطة</div></button>
-    <button class="card" type="button" data-url="https://defullah2010-svg.github.io/L1397/" data-title="التواصل مع أولياء الأمور"><div class="ico">📞</div><div class="ttl">التواصل مع أولياء الأمور</div></button>
-    <button class="card" type="button" data-url="https://defullah2010-svg.github.io/T1397/" data-title="التوجيه الطلابي"><div class="ico">🎓</div><div class="ttl">التوجيه الطلابي</div></button>
-    <button class="card" type="button" data-url="https://defullah2010-svg.github.io/V1397/" data-title="تبادل الزيارات"><div class="ico">📝</div><div class="ttl">تبادل الزيارات</div></button>
-    <button class="card" type="button" data-url="https://defullah2010-svg.github.io/P1397/" data-title="خريطة نواتج التعلّم"><div class="ico">🗺️</div><div class="ttl">خريطة نواتج التعلّم</div></button>
-    <button class="card special" type="button" data-local="wait" data-title="حصة الانتظار"><div class="ico">🕒</div><div class="ttl">حصة الانتظار</div><div class="sub">تسجيل ومتابعة حصص الانتظار</div></button>
-    <button class="card purple" type="button" data-local="lab" data-title="المختبرات"><div class="ico">🔬</div><div class="ttl">المختبرات</div><div class="sub">تقارير البرامج والتجارب</div></button>
-    <button class="card special" type="button" data-local="general" data-title="التقرير العام"><div class="ico">📄</div><div class="ttl">التقرير العام</div><div class="sub">يومي • أسبوعي • شهري</div></button>
-    <button class="card" type="button" data-url="https://defullah2010-svg.github.io/PLC1397/" data-title="مجتمعات التعلّم المهنية"><div class="ico">📑</div><div class="ttl">مجتمعات التعلّم المهنية</div></button>
-    <button class="card" type="button" data-url="https://defullah2010-svg.github.io/D1397/" data-title="التوجيه الصحّي"><div class="ico">⚕️</div><div class="ttl">التوجيه الصحّي</div></button>
-    <button class="card" type="button" data-url="https://defullah2010-svg.github.io/S1397/" data-title="التعلّم النشط"><div class="ico">♟️</div><div class="ttl">التعلّم النشط</div></button>
-    <button class="card" type="button" data-url="https://defullah2010-svg.github.io/LessonA1397/" data-title="الدرس التطبيقي"><div class="ico">📚</div><div class="ttl">الدرس التطبيقي</div></button>
-    <button class="card" type="button" data-url="https://defullah2010-svg.github.io/Warshah1397/" data-title="ورش العمل"><div class="ico">🛠️</div><div class="ttl">ورش العمل</div></button>
-  </div>
-</main>
+<section class="top"><div id="country"></div><div id="ministry"></div><div id="department"></div><b id="school"></b></section>
+<section class="hero"><h1>نظام التقارير الإلكترونية</h1><p>منصة متكاملة لإدارة التقارير المدرسية</p><div class="q">﴿ وَقُلْ رَبِّ زِدْنِي عِلْمًا ﴾</div></section>
+<main class="main" id="home"><h2>تقارير المدرسة الشاملة</h2><div class="cards">
+<button class="card" type="button" data-url="https://defullah2010-svg.github.io/R1397/" data-title="التقارير"><div class="ico">🗓️</div><div class="ttl">التقارير</div><div class="sub">اليومي • الأسبوعي • الشهري</div></button>
+<button class="card" type="button" data-url="https://defullah2010-svg.github.io/A1397/" data-title="النشاط الطلابي"><div class="ico">🌟</div><div class="ttl">النشاط الطلابي</div></button>
+<button class="card" type="button" data-url="https://defullah2010-svg.github.io/AC1397/" data-title="الأنشطة اللاصفية"><div class="ico">🧩</div><div class="ttl">الأنشطة اللاصفية</div></button>
+<button class="card" type="button" data-url="https://defullah2010-svg.github.io/Trace1397/" data-title="متابعة الأنشطة"><div class="ico">📋</div><div class="ttl">متابعة الأنشطة</div></button>
+<button class="card" type="button" data-url="https://defullah2010-svg.github.io/L1397/" data-title="التواصل مع أولياء الأمور"><div class="ico">📞</div><div class="ttl">التواصل مع أولياء الأمور</div></button>
+<button class="card" type="button" data-url="https://defullah2010-svg.github.io/T1397/" data-title="التوجيه الطلابي"><div class="ico">🎓</div><div class="ttl">التوجيه الطلابي</div></button>
+<button class="card" type="button" data-url="https://defullah2010-svg.github.io/V1397/" data-title="تبادل الزيارات"><div class="ico">📝</div><div class="ttl">تبادل الزيارات</div></button>
+<button class="card" type="button" data-url="https://defullah2010-svg.github.io/P1397/" data-title="خريطة نواتج التعلّم"><div class="ico">🗺️</div><div class="ttl">خريطة نواتج التعلّم</div></button>
+<button class="card special" type="button" data-original-local="wait" data-title="حصة الانتظار"><div class="ico">🕒</div><div class="ttl">حصة الانتظار</div><div class="sub">تسجيل ومتابعة حصص الانتظار</div></button>
+<button class="card purple" type="button" data-original-local="lab" data-title="المختبرات"><div class="ico">🔬</div><div class="ttl">المختبرات</div><div class="sub">تقارير البرامج والتجارب</div></button>
+<button class="card special" type="button" data-original-local="general" data-title="التقرير العام"><div class="ico">📄</div><div class="ttl">التقرير العام</div><div class="sub">يومي • أسبوعي • شهري</div></button>
+<button class="card" type="button" data-url="https://defullah2010-svg.github.io/PLC1397/" data-title="مجتمعات التعلّم المهنية"><div class="ico">📑</div><div class="ttl">مجتمعات التعلّم المهنية</div></button>
+<button class="card" type="button" data-url="https://defullah2010-svg.github.io/D1397/" data-title="التوجيه الصحّي"><div class="ico">⚕️</div><div class="ttl">التوجيه الصحّي</div></button>
+<button class="card" type="button" data-url="https://defullah2010-svg.github.io/S1397/" data-title="التعلّم النشط"><div class="ico">♟️</div><div class="ttl">التعلّم النشط</div></button>
+<button class="card" type="button" data-url="https://defullah2010-svg.github.io/LessonA1397/" data-title="الدرس التطبيقي"><div class="ico">📚</div><div class="ttl">الدرس التطبيقي</div></button>
+<button class="card" type="button" data-url="https://defullah2010-svg.github.io/Warshah1397/" data-title="ورش العمل"><div class="ico">🛠️</div><div class="ttl">ورش العمل</div></button>
+</div></main>
 <footer class="footer">الابتدائية السابعة بالوجه — مديرة المدرسة: هديل الطيار</footer>
-
-<div class="viewer" id="viewer">
-  <div class="bar"><b id="viewTitle">التقرير</b><button class="back" type="button" id="closeBtn">العودة للرئيسية</button></div>
-  <div class="loading" id="loading">جاري فتح التقرير...</div>
-  <iframe class="frame" id="frame" src="about:blank" allow="clipboard-write"></iframe>
-</div>
-
+<div class="viewer" id="viewer"><div class="bar"><b id="viewTitle">التقرير</b><button class="back" type="button" id="closeBtn">العودة للرئيسية</button></div><div class="loading" id="loading">جاري فتح التقرير الأصلي...</div><iframe class="frame" id="frame" src="about:blank"></iframe></div>
 <script>
 const C=window.SCHOOL_CONFIG||{};
 document.getElementById('country').textContent=C.country||'المملكة العربية السعودية';
 document.getElementById('ministry').textContent=C.ministry||'وزارة التعليم';
 document.getElementById('department').textContent=C.department||'الإدارة العامة للتعليم بمنطقة تبوك';
 document.getElementById('school').textContent=C.schoolName||'الابتدائية السابعة بالوجه';
-
-const viewer=document.getElementById('viewer');
-const frame=document.getElementById('frame');
-const viewTitle=document.getElementById('viewTitle');
-const loading=document.getElementById('loading');
-let pendingLocal=null;
-
-function openViewer(title){
-  viewTitle.textContent=title||'التقرير';
-  viewer.style.display='block';
-  document.body.style.overflow='hidden';
-  loading.classList.add('show');
-}
-function go(url,title){
-  pendingLocal=null;
-  openViewer(title);
-  frame.src=url;
-}
-function patchLocalSchoolPage(which){
-  try{
-    const w=frame.contentWindow;
-    const d=frame.contentDocument;
-    if(!w||!d) return;
-
-    // تخزين مستقل للابتدائية السابعة حتى لا تختلط بياناتها مع المدرسة الأخرى.
-    w.safeGetStorage=function(key){
-      try{return w.localStorage.getItem('school7_wajh__'+key)}catch(e){return null}
-    };
-    w.safeSetStorage=function(key,value){
-      try{w.localStorage.setItem('school7_wajh__'+key,value);return true}catch(e){return false}
-    };
-
-    // تحديث البيانات المحفوظة بعد تغيير مساحة التخزين.
-    if(typeof w.waitLoadSessions==='function') w.waitLoadSessions();
-    if(typeof w.loadLab==='function') w.loadLab();
-    if(typeof w.loadGeneral==='function') w.loadGeneral();
-
-    // تعديل اسم المديرة داخل صفحات الطباعة الخاصة بالنماذج المحلية.
-    ['buildWaitPrintHTML','buildLabsPrintHTML','buildGeneralPrintHTML'].forEach(function(fn){
-      if(typeof w[fn]==='function' && !w[fn].__school7patched){
-        const original=w[fn];
-        const wrapped=function(){
-          let html=original.apply(w,arguments);
-          if(typeof html==='string'){
-            html=html.replace(/أماني\s+آل\s+عبشان/g,'هديل الطيار');
-            html=html.replace(/الابتدائية\s+السادسة\s+والعشرون/g,'الابتدائية السابعة بالوجه');
-          }
-          return html;
-        };
-        wrapped.__school7patched=true;
-        w[fn]=wrapped;
-      }
-    });
-
-    if(typeof w.loadLocal==='function') w.loadLocal(which);
-
-    // داخل هذه النسخة نعرض النموذج مباشرة دون تكرار رأس وقائمة المدرسة الأخرى.
-    const header=d.querySelector('.header-logo'); if(header) header.style.display='none';
-    const nav=d.querySelector('nav'); if(nav) nav.style.display='none';
-    const back=d.getElementById('back-btn'); if(back) back.style.display='none';
-    const footer=d.querySelector('.site-footer'); if(footer) footer.style.display='none';
-    d.documentElement.style.scrollBehavior='auto';
-    w.scrollTo(0,0);
-  }catch(err){
-    console.warn('تعذر تخصيص النموذج المحلي',err);
-  }
-}
-function openLocal(which,title){
-  pendingLocal=which;
-  openViewer(title);
-  // نفس نماذج المدرسة الأخرى حرفيًا، مع عزل بيانات المدرسة السابعة وتغيير المديرة.
-  frame.src='https://wwwjs2.github.io/school26/?school7='+encodeURIComponent(which)+'&v=2';
-}
+const viewer=document.getElementById('viewer'),frame=document.getElementById('frame'),viewTitle=document.getElementById('viewTitle'),loading=document.getElementById('loading');
+let originalLocal=null;
+function openViewer(title){viewTitle.textContent=title||'التقرير';viewer.style.display='block';document.body.style.overflow='hidden';loading.classList.add('show')}
+function openOriginal(url,title){originalLocal=null;openViewer(title);frame.src=url}
+function openOriginalLocal(which,title){originalLocal=which;openViewer(title);frame.src='https://wwwjs2.github.io/school26/?source=original&section='+encodeURIComponent(which)+'&t='+Date.now()}
 frame.addEventListener('load',function(){
   loading.classList.remove('show');
-  if(pendingLocal) setTimeout(function(){patchLocalSchoolPage(pendingLocal)},80);
+  if(!originalLocal)return;
+  setTimeout(function(){
+    try{
+      const w=frame.contentWindow;
+      if(w&&typeof w.loadLocal==='function'){
+        w.loadLocal(originalLocal);
+        w.scrollTo(0,w.document.getElementById('local-pages')?.offsetTop||0);
+      }
+    }catch(e){console.warn(e)}
+  },120);
 });
-function closeViewer(){
-  viewer.style.display='none';
-  document.body.style.overflow='';
-  frame.src='about:blank';
-  pendingLocal=null;
-  window.scrollTo({top:0,behavior:'smooth'});
-}
+function closeViewer(){viewer.style.display='none';document.body.style.overflow='';frame.src='about:blank';originalLocal=null;window.scrollTo({top:0,behavior:'smooth'})}
 document.getElementById('closeBtn').addEventListener('click',closeViewer);
-document.addEventListener('keydown',function(e){if(e.key==='Escape'&&viewer.style.display==='block')closeViewer()});
-
-document.querySelectorAll('.card').forEach(function(btn){
-  btn.addEventListener('click',function(){
-    if(btn.dataset.local) openLocal(btn.dataset.local,btn.dataset.title);
-    else if(btn.dataset.url) go(btn.dataset.url,btn.dataset.title);
-  });
-});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&viewer.style.display==='block')closeViewer()});
+document.querySelectorAll('.card').forEach(btn=>btn.addEventListener('click',function(){
+  if(btn.dataset.originalLocal)openOriginalLocal(btn.dataset.originalLocal,btn.dataset.title);
+  else if(btn.dataset.url)openOriginal(btn.dataset.url,btn.dataset.title);
+}));
 </script>
-</body>
-</html>
+</body></html>
