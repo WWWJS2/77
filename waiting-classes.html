@@ -583,7 +583,7 @@
       .value{border:1px solid #00758d;border-radius:1.5mm;margin-top:1mm;padding:2mm 3mm;min-height:11mm;font-size:11.5pt;text-align:center;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
       .activity .value{min-height:45mm;text-align:right;font-size:12pt}
       .signature{width:75mm;margin-top:12mm;margin-right:auto}
-      @media print{html,body{margin:0;padding:0;background:#fff}.sheet{margin:0;width:210mm;min-height:296mm;box-shadow:none}}
+      @media print{html,body{margin:0!important;padding:0!important;height:auto!important;min-height:0!important;background:#fff}.sheet{margin:0!important;width:210mm;height:294mm;min-height:0!important;box-shadow:none;break-inside:avoid;page-break-inside:avoid}.sheet:last-child{break-after:auto!important;page-break-after:auto!important}.letterhead{height:294mm}.report-title span{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
       </style></head><body>${pages}</body></html>`;
   }
 
