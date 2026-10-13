@@ -408,25 +408,8 @@
         <textarea class="input" id="activitiesText" required placeholder="اكتبي بإيجاز ما تم عمله في حصة الانتظار..."></textarea>
       </label>
 
-      <label>المجال / نوع النشاط *
-        <div class="chipset">
-          <label class="chip">
-            <input type="checkbox" id="basicSkills">
-            <span>المهارات الأساسية</span>
-          </label>
-          <label class="chip">
-            <input type="checkbox" id="values">
-            <span>القيم والمواطنة الصالحة</span>
-          </label>
-          <label class="chip">
-            <input type="checkbox" id="futureSkills">
-            <span>مهارات المستقبل</span>
-          </label>
-        </div>
-      </label>
-
-      <label for="customActivityType">نوع نشاط آخر (اكتبي بنفسك)
-        <input class="input" type="text" id="customActivityType" placeholder="مثال: قراءة حرة، مسابقة ثقافية، نشاط فني">
+      <label for="customActivityType">نوع النشاط *
+        <input class="input" type="text" id="customActivityType" required placeholder="اكتبي نوع النشاط">
       </label>
 
       <div class="actions">
@@ -602,14 +585,11 @@
       const activities=document.getElementById('activitiesText').value.trim();
 
       const fields=[];
-      if(document.getElementById('basicSkills').checked) fields.push('المهارات الأساسية');
-      if(document.getElementById('values').checked) fields.push('القيم والمواطنة الصالحة');
-      if(document.getElementById('futureSkills').checked) fields.push('مهارات المستقبل');
       const customActivityType=document.getElementById('customActivityType').value.trim();
       if(customActivityType) fields.push(customActivityType);
 
       if(!week||!day||!date||!className||!number||!teacher||!activities||fields.length===0){
-        showToast('أكملي جميع الحقول واختاري نوع نشاط أو اكتبيه في خانة نوع نشاط آخر','warn'); return;
+        showToast('أكملي جميع الحقول واكتبي نوع النشاط','warn'); return;
       }
 
       waitSessions.push({week,day,date,className,number,teacher,activities,fields:fields.join('، ')});
