@@ -56,7 +56,7 @@ const viewer=document.getElementById('viewer'),frame=document.getElementById('fr
 let originalLocal=null;
 function openViewer(title){viewTitle.textContent=title||'التقرير';viewer.style.display='block';document.body.style.overflow='hidden';loading.classList.add('show')}
 function openOriginal(url,title){originalLocal=null;openViewer(title);frame.src=url}
-function openOriginalLocal(which,title){originalLocal=which;openViewer(title);frame.src='https://wwwjs2.github.io/school26/?source=original&section='+encodeURIComponent(which)+'&t='+Date.now()}
+function openOriginalLocal(which,title){if(which==='wait'){openOriginal('waiting-classes.html?v=20261013',title);return;}originalLocal=which;openViewer(title);frame.src='https://wwwjs2.github.io/school26/?source=original&section='+encodeURIComponent(which)+'&t='+Date.now()}
 frame.addEventListener('load',function(){
   loading.classList.remove('show');
   if(!originalLocal)return;
