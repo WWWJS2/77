@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>التقرير العام | الابتدائية السابعة بالوجه</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+<script src="config.js"></script><script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script><script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/ar.js"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f0fdf4;color:#153e50;font-family:Tajawal,Arial,sans-serif}header{background:linear-gradient(90deg,#00a58f,#005b96);color:#fff;text-align:center;padding:22px}h1{margin:0;font-size:26px}main{max-width:1000px;margin:24px auto;padding:0 16px}form,.saved{background:white;border:1px solid #d1fae5;border-radius:16px;padding:22px;margin-bottom:22px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}label{display:block;font-weight:800;margin-bottom:16px}input,textarea,select{width:100%;font:inherit;color:inherit;padding:10px;border:1px solid #9acfc7;border-radius:8px;margin-top:6px}textarea{min-height:100px;resize:vertical}input:focus,textarea:focus,select:focus{outline:2px solid #10b981}button{font:inherit;border:0;border-radius:9px;padding:10px 16px;background:#07856f;color:#fff;font-weight:800;cursor:pointer}.actions{display:flex;gap:10px;flex-wrap:wrap}.secondary{background:#005b96}.danger{background:#b91c1c}.muted{color:#64748b;font-size:14px;margin:6px 0 14px}.previews{display:flex;gap:12px;flex-wrap:wrap}.preview{position:relative}.preview img{width:130px;height:100px;object-fit:contain;border:1px solid #d1fae5;border-radius:8px}.preview button{position:absolute;top:0;left:0;padding:2px 8px;background:#b91c1c}article{border-top:1px solid #d1fae5;padding:14px 0}article h3{margin:0 0 6px}.status{padding:10px;border-radius:8px;background:#e0f2fe;margin-bottom:16px}.flatpickr-calendar{font-family:inherit;direction:rtl}@media(max-width:600px){.grid{grid-template-columns:1fr}form,.saved{padding:16px}}
+</style></head><body>
+<header><h1>التقرير العام</h1><div>الابتدائية السابعة بالوجه</div></header>
+<main><div id="status" class="status" role="status" hidden></div>
+<form id="activityForm">
+<div class="grid">
+<label for="program">اسم البرنامج / الفعالية *<input id="program" required maxlength="200"></label>
+<label for="executor">المنفّذ *<input id="executor" required maxlength="200"></label>
+<label for="beneficiaries">المستفيدون *<input id="beneficiaries" type="text" required placeholder="مثال: طالبات الصف الثالث أو منسوبات المدرسة"></label>
+<label for="count">عدد المستفيدين *<input id="count" type="text" inputmode="numeric" pattern="[0-9]+" placeholder="اكتبي عدد المستفيدين، مثال: ٢٠٠" required></label>
+<label id="dateLabel" for="activityDate">التاريخ *<input id="activityDate" required placeholder="اختر التاريخ"></label>
+</div>
+<label for="location">المكان *<input id="location" required maxlength="200"></label>
+<label for="type">نوع التقرير *<select id="type" required><option value="">اختاري النوع</option><option>يومي</option><option>أسبوعي</option><option>شهري</option><option>فصلي</option><option>عام</option></select></label>
+<label for="details">أبرز ما تم تنفيذه *<textarea id="details" required maxlength="6000"></textarea></label>
+<label for="evidence">صور الشواهد<input id="evidence" type="file" accept="image/png,image/jpeg,image/webp" multiple></label>
+<p class="muted">يمكن رفع 4 صور كحد أقصى، بما فيها صورة رمز QR إن كانت الشواهد على رابط.</p>
+<div id="previews" class="previews"></div>
+<p class="muted">تُحفظ التقارير والصور في هذا المتصفح على جهازك.</p>
+<div class="actions"><button type="submit" id="saveButton">حفظ التقرير</button><button class="secondary" type="button" id="printCurrent">طباعة التقرير</button><button type="button" class="secondary" id="newReport">تقرير جديد</button></div>
+</form>
+<section class="saved"><h2>التقارير المحفوظة</h2><button type="button" class="secondary" id="printAll">طباعة جميع التقارير</button><div id="reportsList"></div></section>
+</main>
+<script>
+'use strict';
+const SCHOOL=Object.assign({schoolName:'الابتدائية السابعة بالوجه',department:'الإدارة العامة للتعليم بمنطقة تبوك',principal:'هديل الطيار'},window.SCHOOL_CONFIG||{});
+const KEY='w26_general_reports';
+const $=id=>document.getElementById(id);
+const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let reports=[],images=[],editingId=null,datePicker=null,loadingImages=false,legacyDate='';
+const hijri=new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura',{day:'2-digit',month:'2-digit',year:'numeric'});
+function notice(message){$('status').textContent=message;$('status').hidden=false;}
+function dateText(iso){return iso ? hijri.format(new Date(iso+'T12:00:00')) : '';}
+function normalizeBeneficiaryCount(value){return String(value).trim().replace(/[٠-٩]/g,c=>String(c.charCodeAt(0)-1632)).replace(/[۰-۹]/g,c=>String(c.charCodeAt(0)-1776));}
+$('count').addEventListener('input',event=>{event.target.value=normalizeBeneficiaryCount(event.target.value);});
+function readForm(){
+ $('count').value=normalizeBeneficiaryCount($('count').value);
+ if(loadingImages){notice('انتظري اكتمال تحميل الصور.');return null;}
+ if(!$('activityForm').reportValidity())return null;
+ const record={};for(const key of ['program','executor','beneficiaries','count','location','type','details'])record[key]=$(key).value.trim();
+ record.dateISO=$('activityDate').value;record.dateDisplay=record.dateISO?dateText(record.dateISO):legacyDate;record.date=record.dateDisplay;record.images=[...images];
+ if(['program','executor','beneficiaries','location','type','details'].some(key=>!record[key])||!record.date||Number(record.count)<1||!Number.isInteger(Number(record.count))){notice('أكملي جميع الحقول المطلوبة.');return null;}
+ return record;
+}
+function persist(next){try{localStorage.setItem(KEY,JSON.stringify(next));reports=next;return true;}catch(error){notice('لم يتم الحفظ: مساحة المتصفح غير كافية أو الحفظ ممنوع. قللي الصور أو اطبعي التقرير مباشرة.');return false;}}
+function renderImages(){const area=$('previews');area.replaceChildren();images.forEach((src,i)=>{const wrapper=document.createElement('div');wrapper.className='preview';const img=document.createElement('img');img.src=src;img.alt='شاهد '+(i+1);const remove=document.createElement('button');remove.type='button';remove.textContent='×';remove.setAttribute('aria-label','حذف الشاهد '+(i+1));remove.onclick=()=>{images.splice(i,1);renderImages();};wrapper.append(img,remove);area.append(wrapper);});}
+function clearForm(){legacyDate='';editingId=null;$('activityForm').reset();if(datePicker)datePicker.clear();images=[];renderImages();$('saveButton').textContent='حفظ التقرير';}
+function renderReports(){const area=$('reportsList');area.replaceChildren();if(!reports.length){area.textContent='لا توجد تقارير محفوظة.';return;}reports.forEach(record=>{const row=document.createElement('article');const title=document.createElement('h3');title.textContent=record.program;const detail=document.createElement('p');detail.textContent=record.executor+' — '+(record.dateDisplay||record.date||'');const actions=document.createElement('div');actions.className='actions';for(const [label,callback,kind] of [['طباعة',()=>printReports([record]),'secondary'],['تعديل',()=>editRecord(record),'secondary'],['حذف',()=>{if(confirm('حذف هذا التقرير؟')&&persist(reports.filter(r=>r.id!==record.id))){if(editingId===record.id)clearForm();renderReports();}},'danger']]){const button=document.createElement('button');button.type='button';button.textContent=label;button.className=kind;button.onclick=callback;actions.append(button);}row.append(title,detail,actions);area.append(row);});}
+function editRecord(record){editingId=record.id;for(const key of ['program','executor','beneficiaries','count','location','type','details'])$(key).value=record[key]||'';legacyDate=record.dateDisplay||record.date||'';if(datePicker){datePicker.clear();if(record.dateISO)datePicker.setDate(record.dateISO,true);else datePicker.altInput.value=legacyDate;}else{$('activityDate').value=record.dateISO||'';}images=[...(record.images||[])];renderImages();$('saveButton').textContent='حفظ التعديلات';$('activityForm').scrollIntoView({behavior:'smooth'});}
+function compressedImage(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onerror=()=>reject(new Error('read'));reader.onload=()=>{const img=new Image();img.onerror=()=>reject(new Error('image'));img.onload=()=>{const scale=Math.min(1,1200/Math.max(img.width,img.height));const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));const ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0,canvas.width,canvas.height);resolve(canvas.toDataURL('image/jpeg',.8));};img.src=reader.result;};reader.readAsDataURL(file);});}
+$('evidence').addEventListener('change',async event=>{const files=[...event.target.files];if(files.length+images.length>4){notice('يمكن رفع 4 صور كحد أقصى.');event.target.value='';return;}if(files.some(f=>!/^image\/(png|jpeg|webp)$/.test(f.type)||f.size>12*1024*1024)){notice('اختاري صور JPG أو PNG أو WebP بحجم أقل من 12 ميجابايت للصورة.');event.target.value='';return;}loadingImages=true;try{const added=await Promise.all(files.map(compressedImage));images.push(...added);renderImages();}catch(error){notice('تعذرت قراءة إحدى الصور، لم تتم إضافة الصور الجديدة.');}finally{loadingImages=false;event.target.value='';}});
+$('activityForm').addEventListener('submit',event=>{event.preventDefault();const record=readForm();if(!record)return;record.id=editingId||String(Date.now())+'-'+Math.random().toString(36).slice(2);const next=editingId?reports.map(r=>r.id===editingId?record:r):[...reports,record];if(persist(next)){renderReports();clearForm();notice('تم حفظ التقرير.');}});
+$('newReport').onclick=()=>{if(loadingImages){notice('انتظري اكتمال تحميل الصور.');return;}clearForm();};
+$('printCurrent').onclick=()=>{const record=readForm();if(record)printReports([record]);};
+$('printAll').onclick=()=>{if(!reports.length){notice('لا توجد تقارير محفوظة للطباعة.');return;}printReports(reports);};
+function buildPrintHTML(list){
+ const field=(label,value)=>`<div class="field"><div class="label">${esc(label)}</div><div class="value">${esc(value)}</div></div>`;
+ const pages=list.map(record=>`<section class="sheet"><img class="letterhead" src="https://defullah2010-svg.github.io/AC1397/images/background.png" alt="ديباجة وزارة التعليم"><div class="report-title"><span>التقرير العام</span></div><main class="report-content"><div class="fields two">${field('اسم البرنامج',record.program)}${field('المنفّذ',record.executor)}</div>${field('المستفيدون',record.beneficiaries||'')}<div class="fields three">${field('عدد المستفيدين',record.count)}${field('التاريخ',(record.dateDisplay||record.date||''))}${field('المكان',record.location)}</div><div class="field narrative"><div class="label">نوع التقرير</div><div class="value">${esc(record.type)}</div></div><div class="field narrative"><div class="label">أبرز ما تم تنفيذه</div><div class="value">${esc(record.details)}</div></div><div class="field"><div class="label">صور الشواهد</div><div class="evidence-grid">${(record.images||[]).map((src,i)=>`<img src="${esc(src)}" alt="شاهد ${i+1}">`).join('')}</div></div><div class="signature">${field('مديرة المدرسة',SCHOOL.principal)}</div></main></section>`).join('');
+ return `<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><title>التقرير العام</title><link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet"><style>
+      *{box-sizing:border-box}
+      @page{size:A4 portrait;margin:0}
+      body{margin:0;background:#e5e7eb;font-family:Tajawal,Arial,sans-serif;color:#153e50}
+      .sheet{position:relative;width:210mm;min-height:297mm;margin:8mm auto;background:#fff;padding:52mm 10mm 22mm;isolation:isolate}
+      .sheet + .sheet{break-before:page;page-break-before:always}
+      .letterhead{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;z-index:-1}
+      .report-title{position:absolute;top:39mm;right:50mm;left:50mm;height:11mm;background:#fff;display:flex;align-items:center;justify-content:center}
+      .report-title span{background:linear-gradient(90deg,#00a58f,#005b96);color:#fff;border-radius:6mm;width:72mm;text-align:center;padding:1mm 3mm;font-size:12pt;font-weight:800}
+      .fields{display:grid;gap:3mm;margin-bottom:4mm}
+      .two{grid-template-columns:1fr 1fr}.three{grid-template-columns:1fr 1fr 1fr}
+      .field{min-width:0;margin-bottom:4mm;break-inside:avoid;page-break-inside:avoid}
+      .fields .field{margin-bottom:0}
+      .label{color:#fff;background:linear-gradient(90deg,#00a58f,#005b96);border-radius:1.5mm;padding:1mm 2mm;text-align:center;font-size:11pt;font-weight:800;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+      .value{border:1px solid #00758d;border-radius:1.5mm;margin-top:1mm;padding:2mm 3mm;min-height:11mm;font-size:11.5pt;text-align:center;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+      .activity .value{min-height:45mm;text-align:right;font-size:12pt}
+      .signature{width:75mm;margin-top:12mm;margin-right:auto}
+      @media print{html,body{margin:0!important;padding:0!important;height:auto!important;min-height:0!important;background:#fff}.sheet{margin:0!important;width:210mm;height:294mm;min-height:0!important;box-shadow:none;break-inside:avoid;page-break-inside:avoid}.sheet:last-child{break-after:auto!important;page-break-after:auto!important}.letterhead{height:294mm}.report-title span{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+      
+ .sheet{padding-top:52mm}.report-content>.field{margin-bottom:3mm}.fields{margin-bottom:3mm}.label{font-size:10.5pt}.value{font-size:11pt;padding:1.5mm 2mm;min-height:9mm}.narrative .value{min-height:15mm;text-align:right;line-height:1.6}.evidence-grid{display:grid;grid-template-columns:1fr 1fr;gap:2mm;margin-top:2mm;min-height:10mm}.evidence-grid img{width:100%;height:30mm;object-fit:contain;background:#fff}.signature{margin-top:4mm}.sheet.continued{height:auto!important;min-height:294mm!important;break-inside:auto!important;page-break-inside:auto!important}
+ </style></head><body>${pages}</body></html>`;
+}
+function printReports(list){const w=window.open('','_blank');if(!w){notice('اسمحي بالنوافذ المنبثقة لفتح التقرير.');return;}w.document.open();w.document.write(buildPrintHTML(list));w.document.close();w.document.title='';const ready=async()=>{try{await w.document.fonts.ready;}catch(error){}await Promise.all([...w.document.images].map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.onload=resolve;img.onerror=resolve;})));w.document.querySelectorAll('.sheet').forEach(sheet=>{const content=sheet.querySelector('.report-content');if(content.scrollHeight>830)sheet.classList.add('continued');});w.focus();w.print();};if(w.document.readyState==='complete')ready();else w.addEventListener('load',ready,{once:true});}
+try{const data=JSON.parse(localStorage.getItem(KEY)||'[]');if(Array.isArray(data))reports=data.map((r,i)=>({...r,id:r.id||'legacy-'+i,images:Array.isArray(r.images)?r.images:[],dateDisplay:r.dateDisplay||r.date||''}));}catch(error){notice('تعذرت قراءة التقارير المحفوظة.');}
+if(typeof flatpickr==='function'){datePicker=flatpickr($('activityDate'),{locale:'ar',disableMobile:true,altInput:true,dateFormat:'Y-m-d',altFormat:'d/m/Y',onChange:(dates,value,instance)=>{instance.altInput.value=dateText(value);}});datePicker.altInput.id='activityDateDisplay';$('dateLabel').htmlFor='activityDateDisplay';}else{$('activityDate').type='date';}
+renderReports();
+</script></body></html>
+
