@@ -13,7 +13,7 @@
 <div class="grid">
 <label for="program">اسم البرنامج *<input id="program" required maxlength="200"></label>
 <label for="executor">المنفّذ *<input id="executor" required maxlength="200"></label>
-<label for="beneficiaries">عدد المستفيدين *<input id="beneficiaries" type="number" min="1" step="1" required></label>
+<label for="beneficiaries">عدد المستفيدين *<input id="beneficiaries" type="text" inputmode="numeric" pattern="[0-9]+" placeholder="اكتبي عدد المستفيدين، مثال: ٢٠٠" required></label>
 <label id="dateLabel" for="activityDate">التاريخ *<input id="activityDate" required placeholder="اختر التاريخ"></label>
 </div>
 <label for="place">المكان *<input id="place" required maxlength="200"></label>
@@ -37,7 +37,10 @@ let reports=[],images=[],editingId=null,datePicker=null,loadingImages=false;
 const hijri=new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura',{day:'2-digit',month:'2-digit',year:'numeric'});
 function notice(message){$('status').textContent=message;$('status').hidden=false;}
 function dateText(iso){return iso ? hijri.format(new Date(iso+'T12:00:00')) : '';}
+function normalizeBeneficiaryCount(value){return String(value).trim().replace(/[٠-٩]/g,c=>String(c.charCodeAt(0)-1632)).replace(/[۰-۹]/g,c=>String(c.charCodeAt(0)-1776));}
+$('beneficiaries').addEventListener('input',event=>{event.target.value=normalizeBeneficiaryCount(event.target.value);});
 function readForm(){
+ $('beneficiaries').value=normalizeBeneficiaryCount($('beneficiaries').value);
  if(loadingImages){notice('انتظري اكتمال تحميل الصور.');return null;}
  if(!$('activityForm').reportValidity())return null;
  const record={};for(const key of ['program','executor','beneficiaries','place','objectives','description'])record[key]=$(key).value.trim();
