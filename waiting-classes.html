@@ -359,7 +359,10 @@
 .flatpickr-calendar{font-family:Tajawal,Arial,sans-serif;direction:rtl}
 .date-note{font-weight:500;color:#64748b;font-size:.8rem}
 .report-header{background:linear-gradient(90deg,#00a58f,#005b96)}
-.wait-evidence-help{font-size:.83rem;font-weight:500;color:#64748b}
+.wait-evidence-upload{border:1px solid #a7f3d0;border-radius:14px;background:#fff;padding:16px}
+.wait-evidence-title{font-size:1.05rem;color:#047857;font-weight:900;margin-bottom:10px}
+.wait-evidence-button{display:inline-flex;align-items:center;justify-content:center;width:auto;min-width:240px;font-size:1rem}
+.wait-evidence-help{display:block;margin:9px 0 12px;font-size:.83rem;font-weight:500;color:#64748b}
 .wait-evidence-previews{display:flex;flex-wrap:wrap;gap:10px}
 .wait-evidence-preview{position:relative;width:140px}
 .wait-evidence-preview img{display:block;width:140px;height:105px;object-fit:contain;background:#fff;border:1px solid #bbf7d0;border-radius:8px}
@@ -417,11 +420,13 @@
         <input class="input" type="text" id="customActivityType" required placeholder="اكتبي نوع النشاط">
       </label>
 
-      <label for="waitEvidenceInput">صور الشواهد (اختياري)
-        <input class="input" id="waitEvidenceInput" type="file" accept="image/png,image/jpeg,image/webp" multiple>
-        <span class="wait-evidence-help">يمكن رفع 4 صور كحد أقصى. تُحفظ الصور مع الحصة في هذا المتصفح.</span>
-      </label>
-      <div id="waitEvidencePreviews" class="wait-evidence-previews" aria-live="polite"></div>
+      <div class="wait-evidence-upload" role="group" aria-labelledby="waitEvidenceLabel">
+        <div id="waitEvidenceLabel" class="wait-evidence-title">الشواهد (اختياري)</div>
+        <input id="waitEvidenceInput" type="file" accept="image/png,image/jpeg,image/webp" multiple hidden>
+        <button class="btn wait-evidence-button" id="waitEvidenceButton" type="button">📎 إضافة صور الشواهد</button>
+        <span class="wait-evidence-help">يمكن إرفاق 4 صور كحد أقصى، وتظهر الشواهد في التقرير المطبوع.</span>
+        <div id="waitEvidencePreviews" class="wait-evidence-previews" aria-live="polite"></div>
+      </div>
 
       <div class="actions">
         <button class="btn" type="button" id="saveSession">حفظ الحصة</button>
@@ -553,6 +558,10 @@
   }
 
   function waitInitEvidence(){
+    document.getElementById('waitEvidenceButton').addEventListener('click',()=>{
+      if(waitEvidenceLoading){showToast('انتظري اكتمال تجهيز الصور','warn');return;}
+      document.getElementById('waitEvidenceInput').click();
+    });
     document.getElementById('waitEvidenceInput').addEventListener('change',async event=>{
       const files=[...event.target.files];
       event.target.value='';
