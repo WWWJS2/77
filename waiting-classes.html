@@ -359,6 +359,11 @@
 .flatpickr-calendar{font-family:Tajawal,Arial,sans-serif;direction:rtl}
 .date-note{font-weight:500;color:#64748b;font-size:.8rem}
 .report-header{background:linear-gradient(90deg,#00a58f,#005b96)}
+.wait-evidence-help{font-size:.83rem;font-weight:500;color:#64748b}
+.wait-evidence-previews{display:flex;flex-wrap:wrap;gap:10px}
+.wait-evidence-preview{position:relative;width:140px}
+.wait-evidence-preview img{display:block;width:140px;height:105px;object-fit:contain;background:#fff;border:1px solid #bbf7d0;border-radius:8px}
+.wait-evidence-preview button{position:absolute;top:3px;left:3px;padding:3px 9px;background:#b91c1c;border:0;border-radius:6px;color:#fff;font:inherit;font-weight:800;cursor:pointer}
 </style>
 </head><body><main id="local-pages">  <section id="wait-section" class="card-page" >
     <header class="school-letterhead" id="schoolLetterhead" style="display:none"></header>
@@ -412,6 +417,12 @@
         <input class="input" type="text" id="customActivityType" required placeholder="اكتبي نوع النشاط">
       </label>
 
+      <label for="waitEvidenceInput">صور الشواهد (اختياري)
+        <input class="input" id="waitEvidenceInput" type="file" accept="image/png,image/jpeg,image/webp" multiple>
+        <span class="wait-evidence-help">يمكن رفع 4 صور كحد أقصى. تُحفظ الصور مع الحصة في هذا المتصفح.</span>
+      </label>
+      <div id="waitEvidencePreviews" class="wait-evidence-previews" aria-live="polite"></div>
+
       <div class="actions">
         <button class="btn" type="button" id="saveSession">حفظ الحصة</button>
         <button class="btn" type="button" id="exportSessions">تصدير / طباعة</button>
@@ -426,7 +437,7 @@
           <tr>
             <th>م</th><th>الأسبوع</th><th>اليوم</th><th>التاريخ</th>
             <th>الصف</th><th>الحصة</th><th>المعلمة الغائبة</th>
-            <th>ما تم تنفيذه</th><th>المجال</th><th>إجراء</th>
+            <th>ما تم تنفيذه</th><th>المجال</th><th>الشواهد</th><th>إجراء</th>
           </tr>
         </thead>
         <tbody id="sessionsBody"></tbody>
@@ -489,6 +500,79 @@
   }
 
   let waitSessions=[];
+  let waitEvidenceImages=[];
+  let waitEvidenceLoading=false;
+
+  function waitRenderEvidence(){
+    const previewArea=document.getElementById('waitEvidencePreviews');
+    previewArea.replaceChildren();
+    waitEvidenceImages.forEach((source,i)=>{
+      const wrapper=document.createElement('div');
+      wrapper.className='wait-evidence-preview';
+      const image=document.createElement('img');
+      image.src=source;
+      image.alt='شاهد '+(i+1);
+      const remove=document.createElement('button');
+      remove.type='button';
+      remove.textContent='×';
+      remove.setAttribute('aria-label','حذف الشاهد '+(i+1));
+      remove.addEventListener('click',()=>{
+        if(waitEvidenceLoading) return;
+        waitEvidenceImages.splice(i,1);
+        waitRenderEvidence();
+      });
+      wrapper.append(image,remove);
+      previewArea.append(wrapper);
+    });
+  }
+
+  function waitCompressEvidence(file){
+    return new Promise((resolve,reject)=>{
+      const reader=new FileReader();
+      reader.onerror=()=>reject(new Error('read'));
+      reader.onload=()=>{
+        const image=new Image();
+        image.onerror=()=>reject(new Error('image'));
+        image.onload=()=>{
+          try{
+            const scale=Math.min(1,1100/Math.max(image.width,image.height));
+            const canvas=document.createElement('canvas');
+            canvas.width=Math.max(1,Math.round(image.width*scale));
+            canvas.height=Math.max(1,Math.round(image.height*scale));
+            const context=canvas.getContext('2d');
+            context.fillStyle='#fff';
+            context.fillRect(0,0,canvas.width,canvas.height);
+            context.drawImage(image,0,0,canvas.width,canvas.height);
+            resolve(canvas.toDataURL('image/jpeg',.76));
+          }catch(error){reject(error);}
+        };
+        image.src=reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function waitInitEvidence(){
+    document.getElementById('waitEvidenceInput').addEventListener('change',async event=>{
+      const files=[...event.target.files];
+      event.target.value='';
+      if(!files.length) return;
+      if(waitEvidenceLoading){showToast('انتظري حتى يكتمل تجهيز الصور','warn');return;}
+      if(waitEvidenceImages.length+files.length>4){
+        showToast('يمكن رفع 4 صور كحد أقصى','warn');return;
+      }
+      if(files.some(file=>!/^image\/(png|jpeg|webp)$/.test(file.type)||file.size>12*1024*1024)){
+        showToast('اختاري صور JPG أو PNG أو WebP، بحد أقصى 12 ميجابايت لكل صورة','warn');return;
+      }
+      waitEvidenceLoading=true;
+      try{
+        const added=await Promise.all(files.map(waitCompressEvidence));
+        waitEvidenceImages.push(...added);
+        waitRenderEvidence();
+      }catch(error){showToast('تعذرت قراءة إحدى الصور، لم تتم إضافتها','danger');}
+      finally{waitEvidenceLoading=false;}
+    });
+  }
 
   function waitLoadSessions(){
     const saved=safeGetStorage('w26_waiting_sessions');
@@ -498,7 +582,7 @@
     renderWaitSessions();
   }
   function waitSaveSessions(){
-    safeSetStorage('w26_waiting_sessions', JSON.stringify(waitSessions));
+    return safeSetStorage('w26_waiting_sessions', JSON.stringify(waitSessions));
   }
 
   function renderWaitSessions(){
@@ -516,6 +600,7 @@
         <td>${escapeHtml(s.teacher)}</td>
         <td class="text-right">${escapeHtml(s.activities)}</td>
         <td class="text-right">${escapeHtml(s.fields)}</td>
+        <td>${Array.isArray(s.evidence)&&s.evidence.length ? s.evidence.length+' صورة' : '—'}</td>
         <td>
           <button class="btn danger" style="width:auto;padding:4px 10px;font-size:.75rem;border-radius:999px;box-shadow:none;"
                   type="button" data-del-wait="${i}">حذف</button>
@@ -527,8 +612,8 @@
       b.addEventListener('click', ()=>{
         const i = Number(b.dataset.delWait);
         if(!confirm('هل تريدين حذف هذه الحصة؟')) return;
-        waitSessions.splice(i,1);
-        waitSaveSessions();
+        const deleted=waitSessions.splice(i,1)[0];
+        if(!waitSaveSessions()){waitSessions.splice(i,0,deleted);return;}
         renderWaitSessions();
         showToast('تم حذف الحصة');
       });
@@ -538,7 +623,7 @@
   function buildWaitPrintHTML(list){
     const background='https://defullah2010-svg.github.io/AC1397/images/background.png';
     const field=(label,value)=>`<div class="field"><div class="label">${escapeHtml(label)}</div><div class="value">${escapeHtml(value||'')}</div></div>`;
-    const pages=list.map((s,i)=>`<section class="sheet">
+    const pages=list.map((s,i)=>`<section class="sheet${Array.isArray(s.evidence)&&s.evidence.length?' has-evidence':''}">
       <img class="letterhead" src="${background}" alt="ديباجة وزارة التعليم">
       <div class="report-title"><span>تقرير حصص الانتظار</span></div>
       <main class="report-content">
@@ -547,6 +632,7 @@
         <div class="fields three">${field('الصف / الفصل',s.className)}${field('رقم الحصة',s.number)}${field('المعلمة الغائبة',s.teacher)}</div>
         <div class="field activity"><div class="label">ما تم تنفيذه مع الطالبات</div><div class="value">${escapeHtml(s.activities||'')}</div></div>
         <div class="field"><div class="label">المجال / نوع النشاط</div><div class="value">${escapeHtml(s.fields||'')}</div></div>
+        ${Array.isArray(s.evidence)&&s.evidence.length ? `<div class="field evidence"><div class="label">صور الشواهد</div><div class="evidence-grid">${s.evidence.filter(src=>typeof src==='string'&&/^data:image\/(?:jpeg|png|webp);base64,/.test(src)).slice(0,4).map((src,j)=>`<img src="${escapeHtml(src)}" alt="شاهد ${j+1}">`).join('')}</div></div>` : ''}
         <div class="signature">${field('مديرة المدرسة',SCHOOL.principal)}</div>
       </main>
     </section>`).join('');
@@ -570,6 +656,10 @@
       .value{border:1px solid #00758d;border-radius:1.5mm;margin-top:1mm;padding:2mm 3mm;min-height:11mm;font-size:11.5pt;text-align:center;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
       .activity .value{min-height:45mm;text-align:right;font-size:12pt}
       .signature{width:75mm;margin-top:12mm;margin-right:auto}
+      .evidence-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2mm;margin-top:2mm}
+      .evidence-grid img{display:block;width:100%;height:28mm;object-fit:contain;background:#fff;border:1px solid #bdd4d4;border-radius:1mm}
+      .has-evidence .activity .value{min-height:26mm}
+      .has-evidence .signature{margin-top:4mm}
       @media print{html,body{margin:0!important;padding:0!important;height:auto!important;min-height:0!important;background:#fff}.sheet{margin:0!important;width:210mm;height:294mm;min-height:0!important;box-shadow:none;break-inside:avoid;page-break-inside:avoid}.sheet:last-child{break-after:auto!important;page-break-after:auto!important}.letterhead{height:294mm}.report-title span{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
       </style></head><body>${pages}</body></html>`;
   }
@@ -583,6 +673,7 @@
       const number=document.getElementById('sessionNumber').value.trim();
       const teacher=document.getElementById('absentTeacher').value.trim();
       const activities=document.getElementById('activitiesText').value.trim();
+      if(waitEvidenceLoading){showToast('انتظري اكتمال تجهيز صور الشواهد','warn');return;}
 
       const fields=[];
       const customActivityType=document.getElementById('customActivityType').value.trim();
@@ -592,19 +683,22 @@
         showToast('أكملي جميع الحقول واكتبي نوع النشاط','warn'); return;
       }
 
-      waitSessions.push({week,day,date,className,number,teacher,activities,fields:fields.join('، ')});
-      waitSaveSessions();
+      waitSessions.push({week,day,date,className,number,teacher,activities,fields:fields.join('، '),evidence:[...waitEvidenceImages]});
+      if(!waitSaveSessions()){waitSessions.pop();return;}
       renderWaitSessions();
       document.getElementById('sesForm').reset();
       if(datePicker) datePicker.clear();
+      waitEvidenceImages=[];
+      waitRenderEvidence();
       showToast('تم حفظ الحصة');
     });
 
     document.getElementById('clearAll').addEventListener('click', ()=>{
       if(!waitSessions.length){showToast('لا توجد حصص مسجلة','warn');return;}
       if(!confirm('مسح جميع حصص الانتظار؟')) return;
+      const previous=waitSessions;
       waitSessions=[];
-      waitSaveSessions();
+      if(!waitSaveSessions()){waitSessions=previous;return;}
       renderWaitSessions();
       showToast('تم مسح جميع الحصص');
     });
@@ -639,6 +733,7 @@
       document.querySelector('label[for="sessionDate"]').htmlFor='sessionDateDisplay';
     }else{input.type='date';}
     waitLoadSessions();
+    waitInitEvidence();
     initWaitForm();
   });
 </script></body></html>
